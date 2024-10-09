@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "c850eb49-a1c5-46ae-ae87-679f00b31a1c",
+		"name": "Товары",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37975098"
+	},
+	"item": [
+		{
+			"name": "Создание карточки",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate response\", function () {\r",
+							"   var StatusCode = pm.response.code ;\r",
+							"\r",
+							"   if (StatusCode !== 201) {\r",
+							"    pm.expect.fail(\"Bad request :( , instead of 201 received \" + StatusCode + \".\");\r",
+							"   }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// динамичная переменная для цены\r",
+							"var randomPrice = (Math.random() * (999.99 - 1.00) + 1.00).toFixed(2);\r",
+							"pm.variables.set(\"price\", randomPrice)\r",
+							"\r",
+							"// динамичная переменная для размера\r",
+							"var randomSize = Math.floor(Math.random() * ((50 - 40))/2 + 1)* 2 + 40;\r",
+							"pm.variables.set(\"size\", randomSize)\r",
+							"\r",
+							"// динамичная переменная для цвета\r",
+							"const colors = ['Черный', 'Красный', 'Синий', 'Белый', 'Фиолетовый','Коричневый']\r",
+							"function getRandomElement(arr) {\r",
+							"    return arr[Math.floor(Math.random() * arr.length)];\r",
+							"}\r",
+							"var randomColor = getRandomElement(colors);\r",
+							"pm.variables.set('randomColor', randomColor);\r",
+							"\r",
+							"\r",
+							"// динамичная переменная для названия\r",
+							"const names = ['Платье', 'Шорты', 'Куртка', 'Брюки', 'Рубашка','Футболка']\r",
+							"const categories = {\r",
+							"    'Платье': 'Платья',\r",
+							"    'Шорты' : 'Шорты', \r",
+							"    'Куртка' : 'Верхняя одежда', \r",
+							"    'Брюки': 'Брюки', \r",
+							"    'Рубашка': 'Рубашки',\r",
+							"    'Футболка': 'Футболки'\r",
+							"};\r",
+							"function getRandomElement(arr) {\r",
+							"    return arr[Math.floor(Math.random() * arr.length)];\r",
+							"}\r",
+							"var randomNames = getRandomElement(names);\r",
+							"var category = categories[randomNames];\r",
+							"\r",
+							"pm.variables.set('randomNames', randomNames);\r",
+							"pm.variables.set('category', category);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"name\": \"{{randomNames}}\",\r\n\"section\": \"{{category}}\",\r\n\"description\": \"{{$randomWords}}\",\r\n\"color\": \"{{randomColor}}\",\r\n\"size\": \"{{size}}\",\r\n\"price\": \"{{price}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{shopUr}}/api/items/create",
+				"description": "### Add Two Numbers\n\nThis endpoint allows you to add two numbers by sending an HTTP POST request to the specified URL.\n\n#### Request Body\n\n- `number1` (number) - The first number to be added.\n    \n- `number2` (number) - The second number to be added.\n    \n\n#### Response\n\nThe response will contain the result of adding the two numbers."
+			},
+			"response": []
+		},
+		{
+			"name": "Поиск всех товаров по тегу",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate response\", function () {\r",
+							"   var StatusCode = pm.response.code ;\r",
+							"\r",
+							"   if (StatusCode === 200) {\r",
+							"    pm.test(\"Good request! :) \"); \r",
+							"   }\r",
+							"   else {\r",
+							"     pm.expect.fail(\"Bad request :( , instead of 200 received \" + StatusCode + \".\");\r",
+							"   }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"query\": \"Шортики\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://shop.bugred.ru/api/items/search"
+			},
+			"response": []
+		},
+		{
+			"name": "Обновление карточки товара",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate response\", function () {\r",
+							"   var StatusCode = pm.response.code ;\r",
+							"\r",
+							"   if (StatusCode === 200) {\r",
+							"    pm.test(\"Good request! :) \"); \r",
+							"   }\r",
+							"   else {\r",
+							"     pm.expect.fail(\"Bad request :( , instead of 200 received \" + StatusCode + \".\");\r",
+							"   }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"id\": \"1377\",\r\n\"name\": \"Рубашка розовая\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://shop.bugred.ru/api/items/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Поиск конкретного товара",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Проверка на пустой ответ', function () {\r",
+							"    var jsonData = pm.response.json() ;\r",
+							"    if (jsonData.hasOwnProperty('result') && Array.isArray(jsonData.result) && jsonData.result.length === 0) {\r",
+							"        pm.test('Товар не найден');\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"query\": \"Топик фиолетовый\",\r\n\"size\": \"444\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://shop.bugred.ru/api/items/search/"
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление фото карточки",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate response\", function () {\r",
+							"   var StatusCode = pm.response.code ;\r",
+							"\r",
+							"   if (StatusCode === 200) {\r",
+							"    pm.test(\"Good request! :) \"); \r",
+							"   }\r",
+							"   else {\r",
+							"     pm.expect.fail(\"Bad request :( , instead of 200 received \" + StatusCode + \".\");\r",
+							"   }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1377",
+							"type": "text"
+						},
+						{
+							"key": "photo",
+							"type": "file",
+							"src": "/C:/Users/natal/Desktop/10367351DT_14_f.avif"
+						}
+					]
+				},
+				"url": "http://shop.bugred.ru/api/items/upload_photo/"
+			},
+			"response": []
+		},
+		{
+			"name": "Удаление карточки товара",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : \"122\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{shopUr}}/api/items/delete"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "shopUr",
+			"value": "http://shop.bugred.ru"
+		}
+	]
+}
